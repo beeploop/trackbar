@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/beeploop/footick/internal/db/repositories"
@@ -91,6 +92,10 @@ func (t *Tracker) PauseTask() (model.Task, error) {
 func (t *Tracker) ContinueTask(taskID int) (model.Task, error) {
 	task, err := t.Tasks.FindByID(taskID)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return model.Task{}, fmt.Errorf("task with specified ID not found")
+		}
+
 		return model.Task{}, err
 	}
 
@@ -103,18 +108,12 @@ func (t *Tracker) ContinueTask(taskID int) (model.Task, error) {
 		return task, fmt.Errorf("cannot continue tracking an already completed task")
 	}
 
-	activeTask, err := t.Tasks.FindActive()
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
-		return task, err
-	}
-
-	// Make sure active task ID and specified provided ID matches
-	if activeTask.ID != taskID {
-		return task, fmt.Errorf("there can only be one active task at a time")
-	}
-
 	updatedTask, err := t.Tasks.Update(task.ID, model.UpdateTask{Status: &model.TASK_ACTIVE})
 	if err != nil {
+		if strings.Contains(err.Error(), "UNIQUE constraint failed") {
+			return model.Task{}, fmt.Errorf("active task already exists, pause or stop current active task to start a new one")
+		}
+
 		return model.Task{}, err
 	}
 

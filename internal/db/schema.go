@@ -20,6 +20,10 @@ func InitializeSchema(db *sqlx.DB) error {
 		ended_at DATETIME,
 		FOREIGN KEY (task_id) REFERENCES tasks(id)
 	);
+
+	CREATE UNIQUE INDEX IF NOT EXISTS idx_one_active_task
+	ON tasks(status)
+	WHERE status = 'active';
 	`
 
 	_, err := db.Exec(stmt)
