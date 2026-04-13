@@ -27,6 +27,18 @@ func (t *Tracker) CreateTask(description string) (model.Task, error) {
 		return model.Task{}, fmt.Errorf("description is required")
 	}
 
+	// This is expected to have an error. has error && error is ErrNoRows = no active task
+	_, err := t.Tasks.FindActive()
+	// Means a different error occurred
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return model.Task{}, err
+	}
+
+	// Means there is no error. An active task is found
+	if err == nil {
+		return model.Task{}, fmt.Errorf("active task already exists, pause or stop current active task to start a new one")
+	}
+
 	task, err := t.Tasks.Create(model.NewTask{
 		Description: description,
 		CreatedAt:   time.Now(),
