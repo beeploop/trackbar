@@ -16,3 +16,7 @@ type Session struct {
 	StartedAt time.Time    `db:"started_at" json:"started_at"`
 	EndedAt   sql.NullTime `db:"ended_at" json:"ended_at"`
 }
+
+type UpdateSession struct {
+	EndedAt *time.Time `db:"ended_at"`
+}

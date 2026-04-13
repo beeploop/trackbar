@@ -1,6 +1,8 @@
 package service
 
 import (
+	"database/sql"
+	"errors"
 	"fmt"
 	"time"
 
@@ -41,4 +43,35 @@ func (t *Tracker) CreateTask(description string) (model.Task, error) {
 	}
 
 	return task, nil
+}
+
+func (t *Tracker) PauseTask() (model.Task, error) {
+	task, err := t.Tasks.FindActive()
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return model.Task{}, fmt.Errorf("no active task to pause")
+		}
+		return model.Task{}, err
+	}
+
+	updatedTask, err := t.Tasks.Update(task.ID, model.UpdateTask{Status: &model.TASK_PAUSED})
+	if err != nil {
+		return model.Task{}, err
+	}
+
+	session, err := t.Sessions.FindActiveByTask(task.ID)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return model.Task{}, fmt.Errorf("no active session with specified task ID")
+		}
+
+		return model.Task{}, err
+	}
+
+	now := time.Now()
+	if _, err := t.Sessions.Update(session.ID, model.UpdateSession{EndedAt: &now}); err != nil {
+		return model.Task{}, err
+	}
+
+	return updatedTask, nil
 }

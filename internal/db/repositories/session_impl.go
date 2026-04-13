@@ -1,6 +1,9 @@
 package repositories
 
 import (
+	"strconv"
+
+	"github.com/Masterminds/squirrel"
 	"github.com/beeploop/footick/internal/model"
 	"github.com/jmoiron/sqlx"
 )
@@ -18,7 +21,15 @@ func NewSessionRepository(db *sqlx.DB) *sessionRepositoryImpl {
 func (r *sessionRepositoryImpl) Create(newSession model.NewSession) (model.Session, error) {
 	var session model.Session
 
-	result, err := r.db.NamedExec("INSERT INTO sessions (task_id, started_at) VALUES (:task_id, :started_at)", newSession)
+	query, args, err := squirrel.Insert("sessions").
+		Columns("task_id", "started_at").
+		Values(newSession.TaskID, newSession.StartedAt).
+		ToSql()
+	if err != nil {
+		return session, err
+	}
+
+	result, err := r.db.Exec(query, args...)
 	if err != nil {
 		return session, err
 	}
@@ -33,8 +44,63 @@ func (r *sessionRepositoryImpl) Create(newSession model.NewSession) (model.Sessi
 
 func (r *sessionRepositoryImpl) FindByID(id int) (model.Session, error) {
 	var session model.Session
-	if err := r.db.Get(&session, "SELECT * FROM sessions WHERE id = ?", id); err != nil {
+
+	query, args, err := squirrel.Select("*").
+		From("sessions").
+		Where(squirrel.Eq{"id": id}).
+		Limit(1).
+		ToSql()
+	if err != nil {
 		return session, err
+	}
+
+	if err := r.db.Get(&session, query, args...); err != nil {
+		return session, err
+	}
+
+	return session, nil
+}
+
+func (r *sessionRepositoryImpl) Update(sessionID int, sessionUpdate model.UpdateSession) (model.Session, error) {
+	var session model.Session
+
+	updates := map[string]any{}
+
+	if sessionUpdate.EndedAt != nil {
+		updates["ended_at"] = sessionUpdate.EndedAt
+	}
+
+	query, args, err := squirrel.Update("sessions").
+		SetMap(updates).
+		Where(squirrel.Eq{"id": sessionID}).
+		ToSql()
+	if err != nil {
+		return session, err
+	}
+
+	if _, err := r.db.Exec(query, args...); err != nil {
+		return session, err
+	}
+
+	return r.FindByID(sessionID)
+}
+
+func (r *sessionRepositoryImpl) FindActiveByTask(taskID int) (model.Session, error) {
+	var session model.Session
+
+	query, args, err := squirrel.Select("*").
+		From("sessions").
+		Where(squirrel.Eq{
+			"task_id":  strconv.Itoa(taskID),
+			"ended_at": nil,
+		}).
+		ToSql()
+	if err != nil {
+		return session, err
+	}
+
+	if err := r.db.Get(&session, query, args...); err != nil {
+		return model.Session{}, err
 	}
 
 	return session, nil

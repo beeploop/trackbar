@@ -5,4 +5,6 @@ import "github.com/beeploop/footick/internal/model"
 type SessionRepository interface {
 	Create(newSession model.NewSession) (model.Session, error)
 	FindByID(id int) (model.Session, error)
+	Update(id int, sessionUpdate model.UpdateSession) (model.Session, error)
+	FindActiveByTask(taskID int) (model.Session, error)
 }

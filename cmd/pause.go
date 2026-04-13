@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/beeploop/footick/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -18,7 +19,13 @@ The elapsed time from the current session is saved automatically.
 Example:
 footick pause`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("pause called")
+		task, err := application.Tracker.PauseTask()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		utils.PrintJSON(task)
 	},
 }
 

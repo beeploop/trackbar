@@ -9,7 +9,7 @@ func InitializeSchema(db *sqlx.DB) error {
 	CREATE TABLE IF NOT EXISTS tasks (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		description TEXT NOT NULL,
-		is_done BOOLEAN DEFAULT False,
+		status TEXT CHECK(status IN('active', 'paused', 'completed')) DEFAULT 'active',
 		created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 	);
 
