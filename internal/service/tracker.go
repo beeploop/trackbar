@@ -87,3 +87,43 @@ func (t *Tracker) PauseTask() (model.Task, error) {
 
 	return updatedTask, nil
 }
+
+func (t *Tracker) ContinueTask(taskID int) (model.Task, error) {
+	task, err := t.Tasks.FindByID(taskID)
+	if err != nil {
+		return model.Task{}, err
+	}
+
+	// Skip if already active
+	if task.Status == model.TASK_ACTIVE {
+		return task, fmt.Errorf("task is already active")
+	}
+
+	if task.Status == model.TASK_COMPLETED {
+		return task, fmt.Errorf("cannot continue tracking an already completed task")
+	}
+
+	activeTask, err := t.Tasks.FindActive()
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return task, err
+	}
+
+	// Make sure active task ID and specified provided ID matches
+	if activeTask.ID != taskID {
+		return task, fmt.Errorf("there can only be one active task at a time")
+	}
+
+	updatedTask, err := t.Tasks.Update(task.ID, model.UpdateTask{Status: &model.TASK_ACTIVE})
+	if err != nil {
+		return model.Task{}, err
+	}
+
+	if _, err := t.Sessions.Create(model.NewSession{
+		TaskID:    task.ID,
+		StartedAt: time.Now(),
+	}); err != nil {
+		return task, err
+	}
+
+	return updatedTask, nil
+}
