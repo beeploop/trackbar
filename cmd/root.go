@@ -1,10 +1,14 @@
 package cmd
 
 import (
+	"fmt"
 	"os"
 
+	"github.com/beeploop/footick/internal/app"
 	"github.com/spf13/cobra"
 )
+
+var application *app.App
 
 var rootCmd = &cobra.Command{
 	Use:   "footick",
@@ -14,6 +18,14 @@ var rootCmd = &cobra.Command{
 It supports starting, pausing, resuming, and stopping task timers.
 
 Summaries are optimized for billing workflows, making it easy to convert tracked hours into invoice-ready reports.`,
+	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+		var err error
+		application, err = app.Bootstrap()
+		return err
+	},
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println(cmd.Long)
+	},
 }
 
 func Execute() {
