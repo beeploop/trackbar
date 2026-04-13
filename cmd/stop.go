@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/beeploop/footick/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -18,7 +19,13 @@ Use this command when the task is fully done and no additional work time should 
 Example:
 footick stop`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("stop called")
+		task, err := application.Tracker.StopTask()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		utils.PrintJSON(task)
 	},
 }
 

@@ -127,3 +127,33 @@ func (t *Tracker) ContinueTask(taskID int) (model.Task, error) {
 
 	return updatedTask, nil
 }
+
+func (t *Tracker) StopTask() (model.Task, error) {
+	activeTask, err := t.Tasks.FindActive()
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return model.Task{}, fmt.Errorf("no active task to stop")
+		}
+
+		return model.Task{}, err
+	}
+
+	updatedTask, err := t.Tasks.Update(activeTask.ID, model.UpdateTask{
+		Status: &model.TASK_COMPLETED,
+	})
+	if err != nil {
+		return model.Task{}, err
+	}
+
+	session, err := t.Sessions.FindActiveByTask(updatedTask.ID)
+	if err != nil {
+		return model.Task{}, err
+	}
+
+	now := time.Now()
+	if _, err := t.Sessions.Update(session.ID, model.UpdateSession{EndedAt: &now}); err != nil {
+		return model.Task{}, err
+	}
+
+	return updatedTask, nil
+}
