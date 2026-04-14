@@ -4,11 +4,13 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"slices"
 	"strings"
 	"time"
 
 	"github.com/beeploop/footick/internal/db/repositories"
 	"github.com/beeploop/footick/internal/model"
+	"github.com/beeploop/footick/internal/utils"
 )
 
 type Tracker struct {
@@ -155,4 +157,32 @@ func (t *Tracker) StopTask() (model.Task, error) {
 	}
 
 	return updatedTask, nil
+}
+
+func (t *Tracker) ListTask() ([]model.TaskSession, error) {
+	taskSessions := make([]model.TaskSession, 0)
+
+	tasks, err := t.Tasks.FindWhere("status IS NOT 'completed'")
+	if err != nil {
+		return taskSessions, err
+	}
+
+	for _, task := range tasks {
+		sessions, err := t.Sessions.FindByTaskID(task.ID)
+		if err != nil {
+			return taskSessions, err
+		}
+
+		taskSessions = append(taskSessions, model.TaskSession{
+			Task: task,
+			Sessions: slices.Collect(
+				utils.Map(sessions, func(session model.Session) model.NormalizedSession {
+					return model.NormalizeSession(session)
+				}),
+			),
+		})
+
+	}
+
+	return taskSessions, nil
 }

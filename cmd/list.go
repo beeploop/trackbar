@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/beeploop/footick/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -18,7 +19,13 @@ This command provides a quick overview of what you are currently working on and 
 Example:
 footick list`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("list called")
+		tasks, err := application.Tracker.ListTask()
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		utils.PrintJSON(tasks)
 	},
 }
 

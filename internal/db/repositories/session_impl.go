@@ -61,6 +61,24 @@ func (r *sessionRepositoryImpl) FindByID(id int) (model.Session, error) {
 	return session, nil
 }
 
+func (r *sessionRepositoryImpl) FindByTaskID(taskID int) ([]model.Session, error) {
+	sessions := make([]model.Session, 0)
+
+	query, args, err := squirrel.Select("*").
+		From("sessions").
+		Where(squirrel.Eq{"task_id": strconv.Itoa(taskID)}).
+		ToSql()
+	if err != nil {
+		return sessions, err
+	}
+
+	if err := r.db.Select(&sessions, query, args...); err != nil {
+		return sessions, err
+	}
+
+	return sessions, nil
+}
+
 func (r *sessionRepositoryImpl) Update(sessionID int, sessionUpdate model.UpdateSession) (model.Session, error) {
 	var session model.Session
 

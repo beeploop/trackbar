@@ -60,6 +60,24 @@ func (r *taskRepositoryImpl) FindByID(id int) (model.Task, error) {
 	return task, nil
 }
 
+func (r *taskRepositoryImpl) FindWhere(query string, args ...interface{}) ([]model.Task, error) {
+	tasks := make([]model.Task, 0)
+
+	query, args, err := squirrel.Select("*").
+		From("tasks").
+		Where(squirrel.Expr(query, args...)).
+		ToSql()
+	if err != nil {
+		return tasks, err
+	}
+
+	if err := r.db.Select(&tasks, query, args...); err != nil {
+		return tasks, err
+	}
+
+	return tasks, nil
+}
+
 func (r *taskRepositoryImpl) Update(taskID int, taskUpdate model.UpdateTask) (model.Task, error) {
 	var task model.Task
 
