@@ -46,7 +46,7 @@ func init() {
 	summaryCmd.Flags().IntVarP(&summaryFilter.TaskID, "task", "t", 0, "Specify task ID")
 
 	// time filters
-	summaryCmd.Flags().BoolVar(&summaryFilter.Today, "today", true, "Show today's summary")
+	summaryCmd.Flags().BoolVar(&summaryFilter.Today, "today", false, "Show today's summary")
 	summaryCmd.Flags().StringVar(&summaryFilter.From, "from", "", "Specify start date (YYYY-MM-DD)")
 	summaryCmd.Flags().StringVar(&summaryFilter.To, "to", "", "Specify end date (YYYY-MM-DD)")
 	summaryCmd.Flags().BoolVar(&summaryFilter.CompletedOnly, "completed-only", false, "Only include tasks that are marked completed")
