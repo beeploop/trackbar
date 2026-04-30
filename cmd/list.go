@@ -18,6 +18,7 @@ This command provides a quick overview of what you are currently working on and 
 
 Example:
 footick list`,
+	Args: cobra.ExactArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 		tasks, err := application.Tracker.ListTask()
 		if err != nil {

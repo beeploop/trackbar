@@ -18,6 +18,7 @@ Use this command when the task is fully done and no additional work time should 
 
 Example:
 footick stop`,
+	Args: cobra.ExactArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 		task, err := application.Tracker.StopTask()
 		if err != nil {
