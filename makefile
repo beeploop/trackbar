@@ -5,7 +5,7 @@ run:
 	@go run main.go
 
 test:
-	@go test -v -failfast ./...
+	@grc go test -v -failfast ./...
 
 clean:
 	@rm -rf bin
