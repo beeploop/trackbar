@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"strconv"
+	"time"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/beeploop/footick/internal/model"
@@ -122,4 +123,25 @@ func (r *sessionRepositoryImpl) FindActiveByTask(taskID int) (model.Session, err
 	}
 
 	return session, nil
+}
+
+func (r *sessionRepositoryImpl) WithinRange(start time.Time, end time.Time) ([]model.Session, error) {
+	sessions := make([]model.Session, 0)
+
+	query, args, err := squirrel.Select("*").
+		From("sessions").
+		Where(squirrel.Lt{"started_at": end}).
+		Where(squirrel.Or{
+			squirrel.Eq{"ended_at": nil},
+			squirrel.Gt{"ended_at": start},
+		}).ToSql()
+	if err != nil {
+		return sessions, err
+	}
+
+	if err := r.db.Select(&sessions, query, args...); err != nil {
+		return sessions, err
+	}
+
+	return sessions, nil
 }

@@ -10,6 +10,18 @@ var (
 	TASK_COMPLETED TaskStatus = "completed"
 )
 
+func (t TaskStatus) IsActive() bool {
+	return t == TASK_ACTIVE
+}
+
+func (t TaskStatus) IsPaused() bool {
+	return t == TASK_PAUSED
+}
+
+func (t TaskStatus) IsCompleted() bool {
+	return t == TASK_COMPLETED
+}
+
 type NewTask struct {
 	Description string    `db:"description"`
 	CreatedAt   time.Time `db:"created_at"`

@@ -186,3 +186,43 @@ func (t *Tracker) ListTask() ([]model.TaskSession, error) {
 
 	return taskSessions, nil
 }
+
+func (t *Tracker) SummarizeTask(taskID int, timerange model.TimeRange, completedOnly bool) ([]model.TaskSession, error) {
+	taskSessions := make([]model.TaskSession, 0)
+
+	inRangeSessions, err := t.Sessions.WithinRange(timerange.From, timerange.To)
+	if err != nil {
+		return taskSessions, err
+	}
+
+	uniqueTasksInSessions := utils.UniqueBy(inRangeSessions, func(session model.Session) int {
+		return session.TaskID
+	})
+
+	for _, session := range uniqueTasksInSessions {
+		task, err := t.Tasks.FindByID(session.TaskID)
+		if err != nil {
+			return taskSessions, err
+		}
+
+		if completedOnly && !task.Status.IsCompleted() {
+			continue
+		}
+
+		sessions, err := t.Sessions.FindByTaskID(task.ID)
+		if err != nil {
+			return taskSessions, err
+		}
+
+		taskSessions = append(taskSessions, model.TaskSession{
+			Task: task,
+			Sessions: slices.Collect(
+				utils.Map(sessions, func(session model.Session) model.NormalizedSession {
+					return model.NormalizeSession(session)
+				}),
+			),
+		})
+	}
+
+	return taskSessions, nil
+}
