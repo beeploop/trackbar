@@ -102,11 +102,11 @@ func (t *Tracker) ContinueTask(taskID int) (model.Task, error) {
 	}
 
 	// Skip if already active
-	if task.Status == model.TASK_ACTIVE {
+	if task.Status.IsActive() {
 		return task, fmt.Errorf("task is already active")
 	}
 
-	if task.Status == model.TASK_COMPLETED {
+	if task.Status.IsCompleted() {
 		return task, fmt.Errorf("cannot continue tracking an already completed task")
 	}
 
