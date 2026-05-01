@@ -3,6 +3,8 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/beeploop/footick/internal/model"
+	"github.com/beeploop/footick/internal/service"
 	"github.com/beeploop/footick/internal/utils"
 	"github.com/spf13/cobra"
 )
@@ -26,7 +28,22 @@ footick stop`,
 			return
 		}
 
-		utils.PrintJSON(task)
+		timerange, err := utils.TimeRangeResolver(&model.SummaryFilter{
+			TaskID: task.ID,
+			Today:  true,
+		})
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		result, err := application.Tracker.SummarizeTask(task.ID, timerange, true)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+
+		service.NewPrinter().PrintSummary(result)
 	},
 }
 
