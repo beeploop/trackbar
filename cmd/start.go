@@ -18,7 +18,7 @@ The task description is stored in the local SQLite database and a new session en
 Use this command whenever you begin work on a new task.
 
 Example:
-footick start "Description of your task"`,
+trackbar start "Description of your task"`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		description := args[0]

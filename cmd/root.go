@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/beeploop/footick/internal/app"
+	"github.com/beeploop/trackbar/internal/app"
 	"github.com/spf13/cobra"
 )
 
 var application *app.App
 
 var rootCmd = &cobra.Command{
-	Use:   "footick",
+	Use:   "trackbar",
 	Short: "Simple freelance time tracking from your terminal",
-	Long: `Footick is a lightweight CLI time tracker designed for freelancers and developers who want fast, local, and interruption-friendly task tracking.
+	Long: `Trackbar is a lightweight CLI time tracker designed for freelancers and developers who want fast, local, and interruption-friendly task tracking.
 
 It supports starting, pausing, resuming, and stopping task timers.
 

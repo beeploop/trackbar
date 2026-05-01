@@ -17,7 +17,7 @@ This allows a single task to accumulate time across multiple work intervals whil
 If no paused task exists, the command should return a helpful message.
 
 Example:
-footick continue [Task ID]`,
+trackbar continue [Task ID]`,
 	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		taskID, err := strconv.Atoi(args[0])

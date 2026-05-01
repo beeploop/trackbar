@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/beeploop/footick/internal/service"
+	"github.com/beeploop/trackbar/internal/service"
 	"github.com/spf13/cobra"
 )
 
@@ -16,7 +16,7 @@ Each task entry includes its description and accumulated tracked duration.
 This command provides a quick overview of what you are currently working on.
 
 Example:
-footick list`,
+trackbar list`,
 	Args: cobra.ExactArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 		result, err := application.Tracker.ListTask()

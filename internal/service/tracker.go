@@ -8,9 +8,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/beeploop/footick/internal/db/repositories"
-	"github.com/beeploop/footick/internal/model"
-	"github.com/beeploop/footick/internal/utils"
+	"github.com/beeploop/trackbar/internal/db/repositories"
+	"github.com/beeploop/trackbar/internal/model"
+	"github.com/beeploop/trackbar/internal/utils"
 )
 
 type Tracker struct {

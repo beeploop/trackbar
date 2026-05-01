@@ -1,4 +1,4 @@
-module github.com/beeploop/footick
+module github.com/beeploop/trackbar
 
 go 1.25.6
 

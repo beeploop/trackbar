@@ -3,7 +3,7 @@ package repositories
 import (
 	"time"
 
-	"github.com/beeploop/footick/internal/model"
+	"github.com/beeploop/trackbar/internal/model"
 )
 
 type SessionRepository interface {

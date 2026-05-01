@@ -5,8 +5,8 @@ import (
 	"os"
 	"text/tabwriter"
 
-	"github.com/beeploop/footick/internal/model"
-	"github.com/beeploop/footick/internal/utils"
+	"github.com/beeploop/trackbar/internal/model"
+	"github.com/beeploop/trackbar/internal/utils"
 )
 
 type Printer struct {

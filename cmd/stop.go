@@ -3,9 +3,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/beeploop/footick/internal/model"
-	"github.com/beeploop/footick/internal/service"
-	"github.com/beeploop/footick/internal/utils"
+	"github.com/beeploop/trackbar/internal/model"
+	"github.com/beeploop/trackbar/internal/service"
+	"github.com/beeploop/trackbar/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -19,7 +19,7 @@ Once stopped, the task’s total tracked time becomes available in list and summ
 Use this command when the task is fully done and no additional work time should be recorded.
 
 Example:
-footick stop`,
+trackbar stop`,
 	Args: cobra.ExactArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 		task, err := application.Tracker.StopTask()

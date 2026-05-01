@@ -1,5 +1,5 @@
 build:
-	@go build -o bin/footick main.go
+	@go build -o bin/trackbar main.go
 
 run:
 	@go run main.go

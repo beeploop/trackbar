@@ -16,7 +16,7 @@ This command is useful when switching context, taking breaks, or temporarily sto
 The elapsed time from the current session is saved automatically.
 
 Example:
-footick pause`,
+trackbar pause`,
 	Args: cobra.ExactArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 		task, err := application.Tracker.PauseTask()

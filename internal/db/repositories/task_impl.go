@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"github.com/Masterminds/squirrel"
-	"github.com/beeploop/footick/internal/model"
+	"github.com/beeploop/trackbar/internal/model"
 	"github.com/jmoiron/sqlx"
 )
 

@@ -3,9 +3,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/beeploop/footick/internal/model"
-	"github.com/beeploop/footick/internal/service"
-	"github.com/beeploop/footick/internal/utils"
+	"github.com/beeploop/trackbar/internal/model"
+	"github.com/beeploop/trackbar/internal/service"
+	"github.com/beeploop/trackbar/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -21,9 +21,9 @@ This command is intended for billing cycles, invoice preparation, and reviewing 
 The output should include both per-task totals and an overall total duration, ideally formatted in decimal hours for easy invoicing.
 
 Examples:
-footick summary --today
-footick summary --from '2026-04-14' --to '2026-04-27'
-footick summary --from '2026-04-14' --to '2026-04-27' --completed-only
+trackbar summary --today
+trackbar summary --from '2026-04-14' --to '2026-04-27'
+trackbar summary --from '2026-04-14' --to '2026-04-27' --completed-only
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		timerange, err := utils.TimeRangeResolver(&summaryFilter)

@@ -1,6 +1,6 @@
 package repositories
 
-import "github.com/beeploop/footick/internal/model"
+import "github.com/beeploop/trackbar/internal/model"
 
 type TaskRepository interface {
 	Create(newTask model.NewTask) (model.Task, error)

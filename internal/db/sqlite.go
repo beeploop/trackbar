@@ -14,7 +14,7 @@ func DBPath() (string, error) {
 		return "", err
 	}
 
-	return filepath.Join(home, ".footick.db"), nil
+	return filepath.Join(home, ".trackbar.db"), nil
 }
 
 func Open() (*sqlx.DB, error) {

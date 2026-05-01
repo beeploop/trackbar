@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/beeploop/footick/internal/model"
+	"github.com/beeploop/trackbar/internal/model"
 )
 
 func TimeRangeResolver(filter *model.SummaryFilter) (model.TimeRange, error) {

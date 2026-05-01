@@ -1,9 +1,9 @@
 package app
 
 import (
-	"github.com/beeploop/footick/internal/db"
-	"github.com/beeploop/footick/internal/db/repositories"
-	"github.com/beeploop/footick/internal/service"
+	"github.com/beeploop/trackbar/internal/db"
+	"github.com/beeploop/trackbar/internal/db/repositories"
+	"github.com/beeploop/trackbar/internal/service"
 )
 
 type App struct {
