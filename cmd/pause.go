@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/beeploop/footick/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -26,7 +25,7 @@ footick pause`,
 			return
 		}
 
-		utils.PrintJSON(task)
+		fmt.Printf("Paused tracking for the task with ID: %d\n", task.ID)
 	},
 }
 

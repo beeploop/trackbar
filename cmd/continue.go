@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/beeploop/footick/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -33,7 +32,7 @@ footick continue [Task ID]`,
 			return
 		}
 
-		utils.PrintJSON(task)
+		fmt.Printf("Continued tracking task with ID: %d\n", task.ID)
 	},
 }
 

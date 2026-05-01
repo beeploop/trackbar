@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/beeploop/footick/internal/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -29,7 +28,7 @@ footick start "Description of your task"`,
 			return
 		}
 
-		utils.PrintJSON(task)
+		fmt.Printf("Started task #%d: %s\n", task.ID, task.Description)
 	},
 }
 
