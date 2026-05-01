@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/beeploop/footick/internal/model"
+	"github.com/beeploop/footick/internal/service"
 	"github.com/beeploop/footick/internal/utils"
 	"github.com/spf13/cobra"
 )
@@ -17,13 +18,13 @@ var summaryCmd = &cobra.Command{
 
 This command is intended for billing cycles, invoice preparation, and reviewing productivity.
 
-Supported ranges may include today, week, month, or custom date intervals.
-
 The output should include both per-task totals and an overall total duration, ideally formatted in decimal hours for easy invoicing.
 
 Examples:
-chronobar summary today
-chronobar summary month`,
+footick summary --today
+footick summary --from '2026-04-14' --to '2026-04-27'
+footick summary --from '2026-04-14' --to '2026-04-27' --completed-only
+`,
 	Run: func(cmd *cobra.Command, args []string) {
 		timerange, err := utils.TimeRangeResolver(&summaryFilter)
 		if err != nil {
@@ -37,7 +38,7 @@ chronobar summary month`,
 			return
 		}
 
-		utils.PrintJSON(result)
+		service.NewPrinter().PrintSummary(result)
 	},
 }
 

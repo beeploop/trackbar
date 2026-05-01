@@ -36,6 +36,37 @@ func (p *Printer) PrintTaskList(tasks []model.TaskSession) {
 	p.printGroup("ACTIVE", active)
 }
 
+func (p *Printer) PrintSummary(tasks []model.TaskSession) {
+	fmt.Fprintln(p.Writer, "\nID\tDESCRIPTION\tSESSIONS\tSTATUS\tTOTAL")
+
+	totalDuration := 0.0
+	for _, task := range tasks {
+		taskDuration := 0.0
+
+		for _, session := range task.Sessions {
+			duration, err := utils.ComputeDuration(session.StartedAt, session.EndedAt)
+			if err != nil {
+				continue
+			}
+			taskDuration += duration
+		}
+		totalDuration += taskDuration
+
+		fmt.Fprintf(
+			p.Writer,
+			"#%d\t%s\t(%d) sessions\t%s\t%s\n",
+			task.Task.ID,
+			task.Task.Description,
+			len(task.Sessions),
+			task.Task.Status,
+			utils.FormatHMS(taskDuration),
+		)
+	}
+
+	fmt.Fprintf(p.Writer, "\nTOTAL:\t%s\n", utils.FormatHMS(totalDuration))
+	p.Writer.Flush()
+}
+
 func (p *Printer) printGroup(groupName string, slice []model.TaskSession) {
 	fmt.Printf("\n%s\n", groupName)
 	fmt.Fprintln(p.Writer, "ID\tDESCRIPTION\tSTART\tEND\tTOTAL")
