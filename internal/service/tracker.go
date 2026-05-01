@@ -233,3 +233,35 @@ func (t *Tracker) SummarizeTask(taskID int, timerange model.TimeRange, completed
 
 	return taskSessions, nil
 }
+
+func (t *Tracker) SwitchTask(targetTaskID int) (model.Task, error) {
+	activeTask, err := t.Tasks.FindActive()
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return model.Task{}, err
+	}
+	if errors.Is(err, sql.ErrNoRows) {
+		return t.ContinueTask(targetTaskID)
+	}
+
+	if activeTask.ID == targetTaskID {
+		return activeTask, nil
+	}
+
+	targetTask, err := t.Tasks.FindByID(targetTaskID)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return model.Task{}, fmt.Errorf("target task not found")
+		}
+		return model.Task{}, err
+	}
+
+	if targetTask.Status.IsCompleted() {
+		return model.Task{}, fmt.Errorf("cannot switch to a completed task")
+	}
+
+	if _, err := t.PauseTask(); err != nil {
+		return model.Task{}, err
+	}
+
+	return t.ContinueTask(targetTask.ID)
+}
