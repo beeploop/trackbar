@@ -4,7 +4,6 @@ go 1.25.6
 
 require (
 	github.com/Masterminds/squirrel v1.5.4
-	github.com/go-jose/go-jose/v4 v4.1.4
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/mattn/go-sqlite3 v1.14.42
 	github.com/spf13/cobra v1.10.2

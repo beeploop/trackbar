@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"strconv"
 
 	"github.com/beeploop/trackbar/internal/model"
 	"github.com/beeploop/trackbar/internal/service"
@@ -18,11 +19,20 @@ Once stopped, the task’s total tracked time becomes available in list and summ
 
 Use this command when the task is fully done and no additional work time should be recorded.
 
+When task id is not provided, it stops the currently active task.
+
 Example:
-trackbar stop`,
-	Args: cobra.ExactArgs(0),
+trackbar stop
+trackbar stop <task_id>`,
+	Args: cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		task, err := application.Tracker.StopTask()
+		var taskID *int
+		if len(args) > 0 {
+			id, _ := strconv.Atoi(args[0])
+			taskID = &id
+		}
+
+		task, err := application.Tracker.StopTask(taskID)
 		if err != nil {
 			fmt.Println(err)
 			return
