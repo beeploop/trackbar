@@ -50,6 +50,7 @@ func init() {
 	summaryCmd.Flags().BoolVar(&summaryFilter.Today, "today", false, "Show today's summary")
 	summaryCmd.Flags().StringVar(&summaryFilter.From, "from", "", "Specify start date (YYYY-MM-DD)")
 	summaryCmd.Flags().StringVar(&summaryFilter.To, "to", "", "Specify end date (YYYY-MM-DD)")
+	summaryCmd.Flags().StringVar(&summaryFilter.Since, "since", "", "Shortcut for --from <START_DATE> --to <NOW>")
 	summaryCmd.Flags().BoolVar(&summaryFilter.CompletedOnly, "completed-only", false, "Only include tasks that are marked completed")
 
 	rootCmd.AddCommand(summaryCmd)

@@ -17,6 +17,9 @@ func TimeRangeResolver(filter *model.SummaryFilter) (model.TimeRange, error) {
 	if filter.From != "" || filter.To != "" {
 		flagCounter++
 	}
+	if filter.Since != "" {
+		flagCounter++
+	}
 
 	if flagCounter > 1 {
 		return model.TimeRange{}, fmt.Errorf("only one time filter can be used at a time")
@@ -39,6 +42,14 @@ func TimeRangeResolver(filter *model.SummaryFilter) (model.TimeRange, error) {
 		}
 
 		return model.TimeRange{From: from, To: to}, nil
+
+	case filter.Since != "":
+		from, err := time.Parse("2006-01-02", filter.Since)
+		if err != nil {
+			return model.TimeRange{}, err
+		}
+
+		return model.TimeRange{From: from, To: time.Now()}, nil
 
 	default:
 		return model.TimeRange{}, fmt.Errorf("invalid time range filter")

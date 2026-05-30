@@ -5,5 +5,6 @@ type SummaryFilter struct {
 	Today         bool
 	From          string
 	To            string
+	Since         string
 	CompletedOnly bool
 }
