@@ -218,7 +218,6 @@ func (t *Tracker) SummarizeTask(taskID int, timerange model.TimeRange, completed
 	if err != nil {
 		return taskSessions, err
 	}
-
 	if taskID != 0 {
 		withTaskID := slices.Collect(utils.Filter(inRangeSessions, func(session model.Session) bool {
 			return session.TaskID == taskID
@@ -240,10 +239,11 @@ func (t *Tracker) SummarizeTask(taskID int, timerange model.TimeRange, completed
 			continue
 		}
 
-		sessions, err := t.Sessions.FindByTaskID(task.ID)
-		if err != nil {
-			return taskSessions, err
-		}
+		sessions := slices.Collect(
+			utils.Filter(inRangeSessions, func(s model.Session) bool {
+				return s.TaskID == task.ID
+			}),
+		)
 
 		taskSessions = append(taskSessions, model.TaskSession{
 			Task: task,
